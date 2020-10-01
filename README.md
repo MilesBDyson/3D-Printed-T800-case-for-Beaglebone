@@ -10,7 +10,7 @@ the bolt patern for the beaglebone was marked holding the Beaglebone in place, t
 standoffs on the Beaglebone, I drilled the holes and dry fitted everything to be sure the standoffs fit nicely
 (had to open up a few of them).
 
-I applyed a liberal amount of model glue to them and installed the Beaglebone, allowing several hours for the
+I applied a liberal amount of model glue to them and installed the Beaglebone, allowing several hours for the
 glue to dry before removing the Beaglebone, I applied more glue making sure the standoffs were firmly fixed in
 place.
 
