@@ -4,7 +4,7 @@ If you have not setup your Beaglebone Black Rev. C yet, you may want to refer to
 
 https://rcn-ee.com/rootfs/2020-04-09/flasher/ 
 
-This the newest release at the time of writing this guide. for the latest Ubuntu Server Image you may want to check by navigating
+This is the newest release at the time of writing this guide. for the latest Ubuntu Server Image you may want to check by navigating
 up one level and make sure you are in the newest release directory where you can download and copy to your microSD card that you
 can install directly to your onboard eMMC. This guide was only tested on Ubuntu but may be the same for Debian also availble there.
 
