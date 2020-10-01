@@ -1,0 +1,230 @@
+Remaping the User LED's to GPIO pins on the BeagleBone Black running Ubuntu Server 18.04 or Newer.
+
+If you have not setup your Beaglebone Black Rev. C yet, you may want to refer to
+
+https://rcn-ee.com/rootfs/2020-04-09/flasher/ 
+
+This the newest release at the time of writing this guide. for the latest Ubuntu Server Image you may want to check by navigating
+up one level and make sure you are in the newest release directory where you can download and copy to your microSD card that you
+can install directly to your onboard eMMC. This guide was only tested on Ubuntu but may be the same for Debian also availble there.
+
+
+
+
+Wiring the circuit for the Leds.
+
+Remember you should allways wire your circuit with the Beaglebone Powered Down. You may damage your Beaglebone if you attempt to
+wire up a circuit with it powered ON.
+
+you will need 4 leds with 4 470ohm resistors and 1 ULN2003A 16-pin Dip, a breadboard will be ideal for setting it all up as you
+can get things working first then move the circuit as needed to a circuitboard to be soldered for a more perminant setup.
+
+            ULN2003A                       LED                    Resistor
+             __ __
+   1    1B--|  U  |--1C    9
+   2    2B--|     |--2C    10              ___
+   3    3B--|     |--3C    11             |   |                   -------
+   4    4B--|     |--4C    12             |   |          ---------| 470 |---------
+   5    5B--|     |--5C    13            -------                  -------
+   6    6B--|     |--6C    14              | |
+   7    7B--|     |--7C    15              | | Neg
+   8   GND--|_____|--VCC   16          Pos |  
+
+
+Make your connections from your Beaglebone GPIO pins to the 'B' side of the ULN2003A IC chip.
+Then make your connecitons from the ULN2003A IC Chip 'C' side to your LED's Negative side.
+
+   --------------------------------------------
+   | Headder | IC Pin |  IC  | IC Pin |  LED  |
+   --------------------------------------------
+   |  P8_8   |   1B   |      |   1C   |  Neg  |
+   |  P8_10  |   2B   |      |   2C   |  Neg  |
+   |  P8_12  |   3B   |      |   3C   |  Neg  |
+   |  P8_14  |   4B   |      |   4C   |  Neg  |
+   --------------------------------------------
+
+
+
+Now i recommend using an external power source for most projects as to not worry about overloading the Beaglebone, so
+if you do use an external power sourece be sure to share the ground of your Beaglebone with the power soruce or the
+circuit will not work.
+
+
+beaglebone ground ----------\
+                             -----> IC Chip Ground (pin 8)                 
+external power ground-------/
+
+
+external power positive ------470ohm resistor-------Pos leg of LED
+
+'C' side of IC Chip---------------------------------Neg leg of LED
+
+
+
+
+Remaping the User LED's
+
+1.) Make Backup
+SSH into your Beaglebone and create a backup of the file your about to edit just in case, its allways best to have a backup.
+
+$ sudo cp /opt/source/dtb-4.14-ti/src/arm/am335x-bone-common.dtsi /opt/source/dtb-4.14-ti/src/arm/am335x-bone-common.dtsi.backup
+
+
+2.) remap user LED's to the GPIO pins
+Edit the file to move the User LED's to the GPIO pins of your choice or you may use the same ones i did in this guide.
+
+$ sudo nano /opt/source/dtb-4.14-ti/src/arm/am335x-bone-common.dtsi
+
+make your file look similar to this, you will find this section near the top of the file, you will need to refer to the headder
+tables, also included in the doc folder and get the mode7 (column) information, depending on what pins you choose. 
+
+comment out with "//" the original lines and add new ones containing your pin information, incase you wish to undo this later.
+I am using pins from the P8 Hedder pins 8,10,12 and 14
+
+
+                led2 {
+                        label = "beaglebone:green:usr0";
+//                      gpios = <&gpio1 21 GPIO_ACTIVE_HIGH>;
+                        gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;            /* P8_8  */
+                        linux,default-trigger = "heartbeat";
+                        default-state = "off";
+                };
+
+                led3 {
+                        label = "beaglebone:green:usr1";
+//                      gpios = <&gpio1 22 GPIO_ACTIVE_HIGH>;
+                        gpios = <&gpio2 4 GPIO_ACTIVE_HIGH>;            /* P8_10 */
+                        linux,default-trigger = "mmc0";
+                        default-state = "off";
+                };
+
+                led4 {
+                        label = "beaglebone:green:usr2";
+//                      gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;
+                        gpios = <&gpio1 12 GPIO_ACTIVE_HIGH>;           /* P8_12 */
+                        linux,default-trigger = "cpu0";
+                        default-state = "off";
+                };
+
+                led5 {
+                        label = "beaglebone:green:usr3";
+//                      gpios = <&gpio1 24 GPIO_ACTIVE_HIGH>;
+                        gpios = <&gpio0 26 GPIO_ACTIVE_HIGH>;           /* P8_14 */
+                        linux,default-trigger = "mmc1";
+                        default-state = "off";
+                };
+
+
+refer to the header tables for correct address/offset (column) of the pins you are using, this will be a Hexadecimal number.
+
+        user_leds_s0: user_leds_s0 {
+                pinctrl-single,pins = <
+//                      AM33XX_PADCONF(AM335X_PIN_GPMC_A5, PIN_OUTPUT_PULLDOWN, MUX_MODE7)      /* gpmc_a5.gpio1_21 */
+//                      AM33XX_PADCONF(AM335X_PIN_GPMC_A6, PIN_OUTPUT_PULLUP, MUX_MODE7)        /* gpmc_a6.gpio1_22 */
+//                      AM33XX_PADCONF(AM335X_PIN_GPMC_A7, PIN_OUTPUT_PULLDOWN, MUX_MODE7)      /* gpmc_a7.gpio1_23 */
+//                      AM33XX_PADCONF(AM335X_PIN_GPMC_A8, PIN_OUTPUT_PULLUP, MUX_MODE7)        /* gpmc_a8.gpio1_24 */
+                        AM33XX_PADCONF(0x894, PIN_OUTPUT_PULLDOWN, MUX_MODE7)      /* P8_8  */
+                        AM33XX_PADCONF(0x898, PIN_OUTPUT_PULLUP, MUX_MODE7)        /* P8_10 */
+                        AM33XX_PADCONF(0x830, PIN_OUTPUT_PULLDOWN, MUX_MODE7)      /* P8_12 */
+                        AM33XX_PADCONF(0x828, PIN_OUTPUT_PULLUP, MUX_MODE7)        /* P8_14 */
+
+                >;
+        };
+
+
+save and close nano (CTRL+o) to save and (CTRL+x) to close.
+
+
+3.) Enter directory to build the new files
+
+$ cd /opt/source/dtb-4.14-ti/
+
+$ sudo make clean
+$ sudo make
+$ sudo make install
+
+
+4.) Create an overlay for the pins.
+This will make a new file so it will be blank.
+
+$ sudo nano /opt/source/bb.org-overlays/src/arm/BB-BONE-MOVED-USER-LEDS.dts
+
+copy the info below and paste it into your terminal, dont forget to change the pins if you used different ones.
+
+
+/* /opt/source/bb.org-overlays/src/arm/BB-BONE-MOVED-USER-LEDS.dts */
+
+/dts-v1/;
+/plugin/;
+
+/ {
+        compatible = "ti,beaglebone-black";
+
+        /* identification */
+        part-number = "BB-BONE-MOVED-USER-LEDS";
+        version = "00A0";
+
+        /*
+         * Free up the pins to be used by the USER LED's from the pinmux helpers.
+         */
+        fragment@0 {
+                target = <&ocp>;
+                __overlay__ {
+                        P8_08_pinmux { status = "disabled"; };   /* P8_8:  Moved User LED's USER1 Heartbeat */
+                        P8_10_pinmux { status = "disabled"; };   /* P8_10: Moved User LED's USER2 Sd Card   */
+                        P8_12_pinmux { status = "disabled"; };   /* P8_12: Moved User LED's USER3 Kernel    */
+                        P8_14_pinmux { status = "Disabled"; };   /* P8_14: Moved User LED's USER3 eMMC      */
+                };
+        };
+
+};
+
+
+5.) Change directory
+
+$ cd /opt/source/bb.org-overlays
+ 
+
+6.) Make
+now you need to compile the new overlay so it can be used.
+
+$ sudo make -d src/arm/BB-BONE-MOVED-USER-LEDS.dtbo
+ 
+
+7.) Install
+this will install the overlay to the correct directory as a .dtbo file.
+
+$ sudo ./install.sh
+
+
+8.) Edit uEnv.txt
+Now we need to tell the Beaglebone where to find the overlay
+
+$ sudo nano /boot/uEnv.txt
+
+add the below line to the ###Custom Cape section of the uEnv.txt file
+
+
+dtb_overlay=/lib/firmware/BB-BONE-MOVED-USER-LEDS.dtbo
+
+
+OPTIONAL:
+you may also want to uncomment thease
+this will disable the video and audio to allow for more pins to be free
+
+
+disable_uboot_overlay_video=1
+disable_uboot_overlay_audio=1
+
+
+save and close the file.
+
+
+9.) reboot and cross fingers.....
+once your Beaglebone reboots you should now see the LED's on your bread board behaving the same as the onboard
+User-LED's use to, also the onboard User-LED's will no longer light up.
+
+
+
+
+
