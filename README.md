@@ -23,6 +23,8 @@ the pins to be used used.
 will need to use an IC chip like ULN2003 to lite the LED's for you, also mentioned in the documents for moving
 the User LED's to GPIO pins.
 
+<b>Update:</b> i decided to holow out the eyes with a dremel and printed a translusent red lens to cover the LED's in the eyes.
+
 
 ![T800](images/GOPR0341.JPG)
 ![T800](images/GOPR0349.JPG)
