@@ -3,7 +3,7 @@ This folder contains instructions and a few charts on how i moved the User LED's
 
 ![T800](BBB-Headder-chart.png)
 
-![T800](BeagleboneBlackP8HeaderTable.pdf)
+![P8Header](BeagleboneBlackP8HeaderTable.pdf)
 
-![T800](BeagleboneBlackP9HeaderTable.pdf)BeagleboneBlackP9HeaderTable.pdf
+![P9Header](BeagleboneBlackP9HeaderTable.pdf)
 
