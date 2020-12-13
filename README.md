@@ -25,10 +25,20 @@ the User LED's to GPIO pins.
 
 <b>Update:</b> i decided to holow out the eyes with a dremel and printed a translusent red lens to cover the LED's in the eyes.
 
-
+Initial Print
 ![T800](images/GOPR0341.JPG)
+
+Chrome spaypaint (not relly chrome) for base color
 ![T800](images/GOPR0349.JPG)
+
+After Antiquing
 ![T800](images/GOPR0355.JPG)
+
+Close up of holes in the temples for User LEDS from the BBB
 ![T800](images/GOPR0356.JPG)
+
+Beaglebone Mounted inside the head
 ![T800](images/GOPR0358.JPG)
+
+Finished result after modifying the eyss with translucent lenses
 ![T800](images/GOPR0368.JPG)
